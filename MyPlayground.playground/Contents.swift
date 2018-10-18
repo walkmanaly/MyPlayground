@@ -32,3 +32,189 @@ bar.filter {ele in
         return false
     }
 }
+
+
+
+//struct Plan: Codable {
+//    var planName: String
+//    var model: String
+//    var seats: Int
+//
+////    private enum CodingKeys: String, CodingKey {
+////        case planName
+////        case model
+////        case seats
+////    }
+////
+////    init(from decoder: Decoder) throws {
+////        let container = try decoder.container(keyedBy: CodingKeys.self)
+////        self.planName = try container.decode(String.self, forKey: .planName)
+////        self.model = try container.decode(String.self, forKey: .model)
+////        self.seats = try! container.decode(Int.self, forKey: .seats)
+////    }
+////
+////    func encode(to encoder: Encoder) throws {
+////        var container = try encoder.container(keyedBy: CodingKeys.self)
+////        try container.encode(self.planName, forKey: .planName)
+////        try container.encode(self.model, forKey: .model)
+////        try container.encode(self.seats, forKey: .seats)
+////    }
+//}
+//
+//let json = """
+//{
+//    "planName": "spaceX",
+//    "model": "superX",
+//    "seats": 4
+//}
+//""".data(using: .utf8)!
+//
+//let decoder = JSONDecoder()
+//
+///* 方式一*/
+//var decodResult: Plan?
+//do {
+//    decodResult = try decoder.decode(Plan.self, from: json)
+//} catch {
+//    print("error= \(error)")
+//}
+//if let decodResult = decodResult {
+//    print(decodResult.planName)
+//    print(decodResult.model)
+//    print(decodResult.seats)
+//}
+//
+///* 方式二 */
+//if let decodResult = try? decoder.decode(Plan.self, from: json) {
+//    print("planName = \(decodResult.planName),model = \(decodResult.model),seats = \(decodResult.seats)")
+//}
+//
+//
+//let encoder = JSONEncoder()
+//encoder.outputFormatting = .prettyPrinted
+//
+//let encodResult = try! encoder.encode(decodResult)
+//print(String(data: encodResult, encoding: .utf8)!)
+//
+//
+//
+//
+//
+//
+//
+//let plansJson = """
+//{
+//    "planes":
+//        [
+//            {
+//                "planName": "spaceX",
+//                "model": "superX",
+//                "seats": 4
+//            },
+//            {
+//                "planName": "spaceX",
+//                "model": "superX",
+//                "seats": 4
+//            }
+//        ]
+//}
+//""".data(using: .utf8)!
+//
+//let plans = try! decoder.decode([String: [Plan]].self, from: plansJson)
+//print(plans)
+
+
+let planesJson = """
+{
+    "aircraft": {
+        "identification": "NA12345",
+        "color": "Blue/White"
+    },
+    "route": ["KTTD", "KHIO"],
+    "departure_time": {
+        "proposed": "2018-04-20T14:15:00-0700",
+        "actual": "2018-04-20T14:20:00-0700"
+    },
+    "flight_rules": "IFR",
+    "remarks": null
+}
+""".data(using: .utf8)!
+
+
+struct Aircraft: Decodable {
+    var identification: String
+    var color: String
+}
+
+enum FlightRules: String, Decodable {
+    case visual = "IFR"
+    case insrument = "BFD"
+}
+
+struct FlightPlane: Decodable {
+    var aircraft: Aircraft
+    
+    var route: [String]
+    
+    private var departureDates: [String: Date]
+    var proposedDepartureDate: Date? {
+        return departureDates["proposed"]
+    }
+    var actualDepartureDate: Date? {
+        return departureDates["actual"]
+    }
+    
+    var flightRules: FlightRules
+    
+    var remarks: String?
+    
+    private enum Codingkeys: String, CodingKey {
+        case aircraft
+        case flightRules = "flight_rules"
+        case route
+        case departureDates = "departure_time"
+        case remarks
+    }
+}
+
+let flightPlaneDecoder = JSONDecoder()
+flightPlaneDecoder.dateDecodingStrategy = .iso8601
+if let flightPlaneSucceed = try? flightPlaneDecoder.decode(FlightPlane.self, from: planesJson) {
+    print(flightPlaneSucceed.actualDepartureDate!)
+} else {
+    print("error")
+}
+
+
+
+do {
+    try flightPlaneDecoder.decode(FlightPlane.self, from: planesJson)
+} catch {
+    print(error)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
