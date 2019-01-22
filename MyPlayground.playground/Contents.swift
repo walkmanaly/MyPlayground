@@ -193,12 +193,31 @@ do {
     print(error)
 }
 
+// optionalChaining
 
+class People {
+    var house: Resident?
+}
 
+class Resident {
+    var numOfRooms = 1
+}
 
+let rose = People()
 
+if let house = rose.house?.numOfRooms {
+    print("rose has \(house) room")
+} else {
+    print("rose has no room.")
+}
 
-
+let jack = People()
+jack.house = Resident()
+if let house = jack.house?.numOfRooms {
+    print("jack has \(house) room")
+} else {
+    print("jack has no room")
+}
 
 
 
