@@ -203,9 +203,13 @@ class Resident {
     var numOfRooms = 1
 }
 
+class ThrChain {
+    var person: People?
+}
+
 let rose = People()
 
-if let house = rose.house?.numOfRooms {
+if let house = rose.house?.numOfRooms { // house 为nil，所以走else分支
     print("rose has \(house) room")
 } else {
     print("rose has no room.")
@@ -213,13 +217,18 @@ if let house = rose.house?.numOfRooms {
 
 let jack = People()
 jack.house = Resident()
-if let house = jack.house?.numOfRooms {
+if let house = jack.house?.numOfRooms { // house不为nil，打印house
     print("jack has \(house) room")
 } else {
     print("jack has no room")
 }
 
-
+let thrChin = ThrChain()
+if let thirTes = thrChin.person?.house?.numOfRooms {
+    print("thirTes is \(thirTes)")
+} else {
+    print("thirTes is nil")
+}
 
 
 
